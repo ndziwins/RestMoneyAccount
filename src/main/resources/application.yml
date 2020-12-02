@@ -1,0 +1,11 @@
+spring:
+  main:
+    banner-mode: off
+  h2.console:
+    enabled: true
+    path: '/console'
+  datasource:
+    url: 'jdbc:h2:mem:testdb'
+  jpa:
+    hibernate:
+      ddl-auto: update
