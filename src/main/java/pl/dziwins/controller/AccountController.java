@@ -80,7 +80,7 @@ public class AccountController {
         if (repository.findById(transaction.getIdFrom()).get().getCurrency() != repository.findById(transaction.getIdTo()).get().getCurrency()){
             return ResponseEntity.badRequest().build();
         }
-        if (repository.findById(transaction.getIdFrom()).get().getMoney() < transaction.getMoney() && !repository.findById(transaction.getIdFrom()).get().isTreasury()){
+        if (repository.findById(transaction.getIdFrom()).get().getMoney().isLessThan(transaction.getMoney()) && !repository.findById(transaction.getIdFrom()).get().isTreasury()){
             return ResponseEntity.badRequest().build();
         }
         repository.findById(transaction.getIdFrom())

@@ -1,5 +1,7 @@
 package pl.dziwins.model;
 
+import org.javamoney.moneta.Money;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Currency;
@@ -16,7 +18,7 @@ public class Account {
     @NotBlank(message = "Currency must be setted up")
     private Currency currency;
     @NotBlank(message = "Balance must be setted up")
-    private float money;
+    private Money money;
     private boolean isTreasury;
 
     public Account() {
@@ -24,10 +26,6 @@ public class Account {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -46,20 +44,16 @@ public class Account {
         this.currency = currency;
     }
 
-    public float getMoney() {
+    public Money getMoney() {
         return money;
     }
 
-    public void setMoney(float money) {
+    public void setMoney(Money money) {
         this.money = money;
     }
 
     public boolean isTreasury() {
         return isTreasury;
-    }
-
-    public void setTreasury(boolean treasury) {
-        isTreasury = treasury;
     }
 
     @Override
@@ -73,16 +67,16 @@ public class Account {
         this.setMoney(toUpdate.getMoney());
     }
 
-    public void transferTo(float transfer){
-        this.setMoney(this.getMoney() + transfer);
+    public void transferTo(Money transfer){
+        this.setMoney(this.getMoney().add(transfer));
     }
 
-    public boolean transferFrom(float transfer){
-        if (transfer < this.getMoney()){
-            this.setMoney(this.getMoney() - transfer);
+    public boolean transferFrom(Money transfer){
+        if (transfer.isLessThan(this.getMoney())){
+            this.setMoney(this.getMoney().subtract(transfer));
             return true;
-        } else if ((transfer > this.getMoney()) && (this.isTreasury())){
-            this.setMoney(this.getMoney() - transfer);
+        } else if ((transfer.isGreaterThan(this.getMoney())) && (this.isTreasury())){
+            this.setMoney(this.getMoney().subtract(transfer));
             return true;
         } else {
             return false;

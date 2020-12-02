@@ -1,15 +1,17 @@
 package pl.dziwins.model;
 
+import org.javamoney.moneta.Money;
+
 public class Transaction {
 
     private int idFrom;
     private int idTo;
-    private float money;
+    private Money money;
 
     public Transaction() {
     }
 
-    public Transaction(int idFrom, int idTo, float money) {
+    public Transaction(int idFrom, int idTo, Money money) {
         this.idFrom = idFrom;
         this.idTo = idTo;
         this.money = money;
@@ -23,7 +25,7 @@ public class Transaction {
         return idTo;
     }
 
-    public float getMoney() {
+    public Money getMoney() {
         return money;
     }
 
