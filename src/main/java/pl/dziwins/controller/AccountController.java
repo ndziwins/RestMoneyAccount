@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.dziwins.model.Account;
 import pl.dziwins.model.AccountRepository;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Currency;
@@ -53,5 +54,19 @@ public class AccountController {
      @GetMapping("/byTreasury/{isTreasury}")
     ResponseEntity<List<Account>> readByTreasury(@PathVariable boolean isTreasury){
         return ResponseEntity.ok(repository.findByIsTreasury(isTreasury));
+    }
+
+    @Transactional
+    @PutMapping("/{id}")
+    ResponseEntity<?> updateAccount(@PathVariable int id, @RequestBody @Valid Account toUpdate) {
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        repository.findById(id)
+                .ifPresent(account -> {
+                    account.updateFrom(toUpdate);
+                    repository.save(account);
+                });
+        return ResponseEntity.noContent().build();
     }
 }
