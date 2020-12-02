@@ -15,13 +15,13 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     Page<Account> findAll(Pageable page);
 
-    Optional<Account> findById(Integer id);
+    Optional<Account> findById(int id);
 
     Optional<Account> findByName(String name);
 
-    Optional<Account> findByCurrency(Currency currency);
+    List<Account> findByCurrency(Currency currency);
 
-//    Optional<Account> findByTreasury(boolean isTreasury);
+    List<Account> findByIsTreasury(boolean isTreasury);
 
     boolean existsById(Integer id);
 

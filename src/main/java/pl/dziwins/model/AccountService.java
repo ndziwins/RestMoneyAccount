@@ -8,6 +8,5 @@ public interface AccountService {
 
     void delete(int id);
 
-    Account findById(Integer id);
 }
 

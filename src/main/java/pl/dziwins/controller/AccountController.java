@@ -8,6 +8,7 @@ import pl.dziwins.model.AccountRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Currency;
 import java.util.List;
 
 @RestController
@@ -28,5 +29,29 @@ public class AccountController {
     @GetMapping
     ResponseEntity<List<Account>> readAllAccounts() {
         return ResponseEntity.ok(repository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<Account> readById(@PathVariable int id){
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/byName/{name}")
+    ResponseEntity<Account> readByName(@PathVariable String name){
+        return repository.findByName(name)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/byCurrency/{currency}")
+    ResponseEntity<List<Account>> readByCurrency(@PathVariable Currency currency){
+        return ResponseEntity.ok(repository.findByCurrency(currency));
+    }
+
+     @GetMapping("/byTreasury/{isTreasury}")
+    ResponseEntity<List<Account>> readByTreasury(@PathVariable boolean isTreasury){
+        return ResponseEntity.ok(repository.findByIsTreasury(isTreasury));
     }
 }

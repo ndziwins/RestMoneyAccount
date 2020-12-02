@@ -28,8 +28,4 @@ public class AccountServiceImplementation implements AccountService {
 
     }
 
-    @Override
-    public Account findById(Integer id) {
-        return null;
-    }
 }
