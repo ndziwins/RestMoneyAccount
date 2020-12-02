@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.dziwins.model.Account;
 import pl.dziwins.model.AccountRepository;
+import pl.dziwins.model.Transaction;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -65,6 +66,31 @@ public class AccountController {
         repository.findById(id)
                 .ifPresent(account -> {
                     account.updateFrom(toUpdate);
+                    repository.save(account);
+                });
+        return ResponseEntity.noContent().build();
+    }
+
+    @Transactional
+    @PutMapping("/transfer")
+    ResponseEntity<?> updateAccounts(@RequestBody @Valid Transaction transaction) {
+        if ((!repository.existsById(transaction.getIdFrom())) || (!repository.existsById(transaction.getIdTo()))) {
+            return ResponseEntity.notFound().build();
+        }
+        if (repository.findById(transaction.getIdFrom()).get().getCurrency() != repository.findById(transaction.getIdTo()).get().getCurrency()){
+            return ResponseEntity.badRequest().build();
+        }
+        if (repository.findById(transaction.getIdFrom()).get().getMoney() < transaction.getMoney() && !repository.findById(transaction.getIdFrom()).get().isTreasury()){
+            return ResponseEntity.badRequest().build();
+        }
+        repository.findById(transaction.getIdFrom())
+                .ifPresent(account -> {
+                    account.transferFrom(transaction.getMoney());
+                    repository.save(account);
+                });
+        repository.findById(transaction.getIdTo())
+                .ifPresent(account -> {
+                    account.transferTo(transaction.getMoney());
                     repository.save(account);
                 });
         return ResponseEntity.noContent().build();
